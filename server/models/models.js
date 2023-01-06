@@ -55,6 +55,14 @@ const CostTransport = sequelize.define("cost_transport", {
   unitsOfCost: { type: DataTypes.STRING },
   cell: { type: DataTypes.STRING, allowNull: false },
 });
+const Section = sequelize.define(
+  "section",
+  {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    name: { type: DataTypes.STRING, allowNull: false },
+  },
+  { timestamps: false }
+);
 
 User.hasMany(TechCart);
 TechCart.belongsTo(User);
@@ -71,6 +79,9 @@ CostService.belongsTo(TechOperation);
 TechOperation.hasOne(CostTransport, { onDelete: "CASCADE" });
 CostTransport.belongsTo(TechOperation);
 
+Section.hasMany(TechOperation);
+TechOperation.belongsTo(Section);
+
 module.exports = {
   User,
   TechCart,
@@ -78,4 +89,5 @@ module.exports = {
   CostMaterial,
   CostService,
   CostTransport,
+  Section,
 };

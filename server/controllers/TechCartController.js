@@ -25,7 +25,10 @@ class TechCartController {
   getAll(req, res) {
     const techCart = TechCart.findAll();
     techCart.then((data) => {
-      return res.json(data);
+      let resData = JSON.parse(JSON.stringify(data));
+      resData.sort((a, b) => a.id - b.id);
+      console.log(resData);
+      return res.json(resData);
     });
   }
   patchCart(req, res) {
@@ -44,8 +47,10 @@ class TechCartController {
       const techOperation = TechOperation.findAll({
         where: { techCartId: id },
       });
-      techOperation.then((oper) => {
-        res.json(oper);
+      techOperation.then((data) => {
+        let resData = JSON.parse(JSON.stringify(data));
+        resData.sort((a, b) => a.id - b.id);
+        return res.json(resData);
       });
     } catch (e) {
       res.json("помилка");
@@ -59,6 +64,7 @@ class TechCartController {
         arr: {
           cell,
           res: { nameOper, price, amount, unitsOfCost, unitsOfConsumption },
+          section,
         },
       } = req.body;
       console.log(cartId);
@@ -71,6 +77,7 @@ class TechCartController {
           nameOperation: nameOper,
           cell,
           [cell]: +price * +amount,
+          sectionId: section,
         })
           .then((data) => {
             const operId = data.id;
